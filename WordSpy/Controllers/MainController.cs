@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using WordSpy.Models;
 
 namespace WordSpy.Controllers
 {
-    public class HomeController : Controller
+    public class MainController : Controller
     {
         public IActionResult Index()
         {
@@ -32,6 +28,11 @@ namespace WordSpy.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public IActionResult StartParamViewSubmit()
+        {
+            return BadRequest("work");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

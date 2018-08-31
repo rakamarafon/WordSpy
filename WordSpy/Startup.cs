@@ -43,7 +43,7 @@ namespace WordSpy
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Main/Error");
             }
 
             app.UseStaticFiles();
@@ -53,7 +53,7 @@ namespace WordSpy
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Main}/{action=Index}/{id?}");
             });
         }
     }
