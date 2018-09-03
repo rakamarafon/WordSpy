@@ -26,8 +26,11 @@ namespace WordSpy.Services
                 var html = _service.GetHTML(graph.Nodes[i].Link);
                 if (html == null) continue;
                 var nodeLinks = _service.GetUrls(html).ToList();
+                var linksCount = nodeLinks.Count;
+                if (linksCount == 0) continue;
                 for (int j = 0; j < deep; j++)
-                {                   
+                {
+                    if (linksCount == j) break;
                     graph.Nodes[i].isNodeOf(new Node(nodeLinks[j]));                    
                 }
                 nodeLinks.Clear();
