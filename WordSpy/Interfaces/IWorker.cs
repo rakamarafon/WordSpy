@@ -7,7 +7,7 @@ namespace WordSpy.Interfaces
     {
         int Threads { get; set; }
         string Word { get; set; }
-        List<string> Links { get; set; }
+        Node Root { get; set; }
 
         List<SearchResult> Results { get; set; }
         void Run();

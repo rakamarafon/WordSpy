@@ -11,7 +11,7 @@ namespace WordSpy.Services
     {
         public int Threads { get; set; }
         public string Word { get; set; }
-        public List<string> Links { get; set; }
+        public Node Root { get; set; }
         public List<SearchResult> Results { get; set; }
         private ISearch _service;
         private IDownload _download;
@@ -35,7 +35,20 @@ namespace WordSpy.Services
 
         private void Search()
         {
-            
+            Node node;
+            while (Root.Nodes.Count != 0)
+            {
+                lock (_block)
+                {
+                    node = Root.Nodes.FirstOrDefault();
+                    if (node != null)
+                    {
+                        Root.Nodes.Remove(node);
+                    }
+                }
+                SearchResult result = _service.Search(node, Word);
+                if(result != null) Results.Add(result);
+            }
         }
     }
 }

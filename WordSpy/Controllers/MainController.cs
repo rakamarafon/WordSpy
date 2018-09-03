@@ -51,9 +51,14 @@ namespace WordSpy.Controllers
             var html = _download.GetHTML(value.URL);
             var links = _download.GetUrls(html);
             Node root = _service.BuildGraph(value.MaxScanURLs, value.URL, links.ToList());
-            SearchResult result = _service.Search(root, value.TextToFind);
-            if(result == null) { return BadRequest("Not Found"); }
-            return View("ResultView", new List<SearchResult> { result });
+            _worker.Root = root;
+            _worker.Threads = value.MaxThreads;
+            _worker.Word = value.TextToFind;
+            _worker.Run();
+            
+            //SearchResult result = _service.Search(root, value.TextToFind);
+            //if(result == null) { return BadRequest("Not Found"); }
+            return View("ResultView", _worker.Results);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -29,12 +29,15 @@ namespace WordSpy.Services
                 graph.isNodeOf(new Node(item));
             }
             int count = graph.Nodes.Count;
+            string html;
+            List<string> nodeLinks;
             for (int i = 0; i < count; i++)
             {
-                var html = _service.GetHTML(graph.Nodes[i].Link);
+                html = _service.GetHTML(graph.Nodes[i].Link);
                 if (html == null) continue;
-                var nodeLinks = _service.GetUrls(html).ToList();
+                nodeLinks = _service.GetUrls(html).ToList();
                 graph.isNodeOfRange(i, nodeLinks, deep);
+                nodeLinks.Clear();
             }
             return graph;
         }
@@ -50,8 +53,8 @@ namespace WordSpy.Services
             {
                 Node n = Q.Dequeue();
                 var html = _service.GetHTML(n.Link);
-                var links = _service.GetUrls(html);
                 if (html == null) continue;
+                var links = _service.GetUrls(html);                
                 var words = CheckHtmlForText(html, textToSearch);
                 if(words.Count > 0) return new SearchResult { URL = n.Link, Childs = links.ToList(), Words = words};
                 foreach (var item in n.Nodes)
