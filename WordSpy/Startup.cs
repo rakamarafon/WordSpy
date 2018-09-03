@@ -36,7 +36,7 @@ namespace WordSpy
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddTransient<ISearch, SearchService>();
             services.AddTransient<IDownload, DownloadService>();
-            services.AddScoped<IWorker, Worker>();
+            services.AddSingleton<IWorker, Worker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

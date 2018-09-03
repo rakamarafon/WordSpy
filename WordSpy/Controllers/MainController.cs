@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using WordSpy.DTO_s;
 using WordSpy.Interfaces;
 using WordSpy.Models;
@@ -51,20 +49,23 @@ namespace WordSpy.Controllers
             var html = _download.GetHTML(value.URL);
             var links = _download.GetUrls(html);
             Node root = _service.BuildGraph(value.MaxScanURLs, value.URL, links.ToList());
-            _worker.Root = root;
-            _worker.Threads = value.MaxThreads;
-            _worker.Word = value.TextToFind;
+            ConfigurateWorker(root, value.MaxThreads, value.TextToFind);
             _worker.Run();
-            
-            //SearchResult result = _service.Search(root, value.TextToFind);
-            //if(result == null) { return BadRequest("Not Found"); }
-            return View("ResultView", _worker.Results);
+            _worker.Wait();
+            return View("ResultView", _worker.GetResults());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private void ConfigurateWorker(Node root, int threads, string textToFind)
+        {
+            _worker.Root = root;
+            _worker.Threads = threads;
+            _worker.Word = textToFind;
         }
     }
 }

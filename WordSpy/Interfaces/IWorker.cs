@@ -8,8 +8,9 @@ namespace WordSpy.Interfaces
         int Threads { get; set; }
         string Word { get; set; }
         Node Root { get; set; }
-
-        List<SearchResult> Results { get; set; }
+        List<SearchResult> GetResults();
+        //List<SearchResult> Results { get; set; }
         void Run();
+        void Wait();
     }
 }
