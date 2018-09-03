@@ -13,22 +13,22 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="URL" class="control-label"></label>
-                <input asp-for="URL" class="form-control" />
+                <input asp-for="URL" class="form-control" placeholder="http://"/>
                 <span asp-validation-for="URL" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MaxThreads" class="control-label"></label>
-                <input asp-for="MaxThreads" class="form-control" />
+                <input asp-for="MaxThreads" class="form-control" placeholder="maximum number of threads"/>
                 <span asp-validation-for="MaxThreads" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TextToFind" class="control-label"></label>
-                <input asp-for="TextToFind" class="form-control" />
+                <input asp-for="TextToFind" class="form-control" placeholder="search..."/>
                 <span asp-validation-for="TextToFind" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MaxScanURLs" class="control-label"></label>
-                <input asp-for="MaxScanURLs" class="form-control" />
+                <input asp-for="MaxScanURLs" class="form-control" placeholder="maximum number of urls"/>
                 <span asp-validation-for="MaxScanURLs" class="text-danger"></span>
             </div>
             <div class="form-group">
