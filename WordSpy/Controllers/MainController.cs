@@ -52,7 +52,7 @@ namespace WordSpy.Controllers
             var html = _download.GetHTML(value.URL);
             var links = _download.GetUrls(html);
             Node root = _service.BuildGraph(value.MaxScanURLs, value.URL, links.ToList());
-            ConfigurateWorker(root, value.MaxThreads, value.TextToFind);
+            _worker.Init(root, value.MaxThreads, value.TextToFind);
             _worker.Run();
             _worker.Wait();
             return View("ResultView", _worker.GetResults());
@@ -66,6 +66,11 @@ namespace WordSpy.Controllers
             pauseResult.Percent = _worker.GetDonePersent();
             return View("PausedView", pauseResult);
         }
+        public IActionResult ResumeSearch()
+        {
+            _worker.Resume();
+            return View("ResultView", _worker.GetResults());
+        }
         public IActionResult StopSearch()
         {
             if (_worker.isRun == false) return View("Index");
@@ -76,13 +81,6 @@ namespace WordSpy.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        private void ConfigurateWorker(Node root, int threads, string textToFind)
-        {
-            _worker.Root = root;
-            _worker.Threads = threads;
-            _worker.Word = textToFind;
         }
     }
 }

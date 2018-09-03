@@ -10,10 +10,12 @@ namespace WordSpy.Interfaces
         bool isRun { get; set; }
         Node Root { get; set; }
         List<SearchResult> GetResults();
+        void Init(Node root, int threads, string searchText);
         int GetDonePersent();
         void Run();
         void Wait();
         void Interrupt();
+        void Resume();
         void Stop();        
     }
 }

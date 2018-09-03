@@ -29,6 +29,12 @@ namespace WordSpy.Services
             Results = new List<SearchResult>();
             isRun = false;
         }
+        public void Init(Node root, int threads, string searchText)
+        {
+            Root = root;
+            Threads = threads;
+            Word = searchText;
+        }
         public List<SearchResult> GetResults()
         {
             return Results;
@@ -55,6 +61,11 @@ namespace WordSpy.Services
             {
                 item.Join(); 
             }
+        }
+
+        public void Resume()
+        {
+
         }
         public void Interrupt()
         {

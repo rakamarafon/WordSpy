@@ -33,12 +33,16 @@ namespace WordSpy.Services
         {
             List<string> Links = new List<string>();
             // string HRefPattern = @"(?i)<\s*?a\s+[\S\s\x22\x27\x3d]*?href=[\x22\x27]?([^\s\x22\x27<>]+)[\x22\x27]?.*?>";
-            string HRefPattern = "href\\s*=\\s*(?:[\"'](?<1>[^\"']*)[\"']|(?<1>\\S+))";
+            //string HRefPattern = "href\\s*=\\s*(?:[\"'](?<1>[^\"']*)[\"']|(?<1>\\S+))";
+            string HRefPattern = "(?:href)=[\"|']?(.*?)[\"|'|>]+";
             Match m = Regex.Match(html, HRefPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
             while (m.Success)
             {
-                Links.Add(m.Groups[1].Value);
-                m = m.NextMatch();
+                if (m.Groups[1].Value.Contains("http"))
+                {
+                    Links.Add(m.Groups[1].Value);
+                    m = m.NextMatch();
+                } else m = m.NextMatch();
             }
             return Links.Distinct();
         }
