@@ -65,5 +65,30 @@ namespace WordSpy.Tests
             Assert.AreEqual(expectNodesInChilds, actualNodesInChilds);
             #endregion
         }
+
+        [Test]
+        public void Search_takes_graph_and_textToSearch_returns_valid_result()
+        {
+            string text = "testSearch";
+            string url = "Fake";
+            List<string> words = new List<string> { text, text, text, text, text };
+            List<string> childs = new List<string>();            
+            Node fakeNode = new Node(url);
+
+            A.CallTo(_fakeDownload)
+                 .Where(call => call.Method.Name == "GetHTML")
+                 .WithReturnType<string>()
+                 .Returns(string.Format("<html> <head> <title>First case html</title> </head> <body> <div>some{0} text some text {1} <a href=>link</a></div> {2} <div>another text {3} <a href=>link</a> text text</div>{4}</body> </html>", text, text, text, text, text));
+
+            A.CallTo(_fakeDownload)
+                .Where(call => call.Method.Name == "GetUrls")
+                .WithReturnType<IEnumerable<string>>()
+                .Returns(childs);
+
+            SearchResult expect = new SearchResult { URL = url, Childs = childs, Words = words };
+            SearchResult result = _service.Search(fakeNode, text);
+
+            Assert.IsTrue(expect.Equals(result));
+        }        
     }
 }
