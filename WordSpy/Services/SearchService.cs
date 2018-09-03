@@ -75,7 +75,7 @@ namespace WordSpy.Services
             var text = html.Split(' ');
             foreach (var item in text)
             {
-                if (item == textToSearch) list.Add(item);
+                if (item.ToLower().Contains(textToSearch.ToLower())) list.Add(item);
             }
             return list;
         }

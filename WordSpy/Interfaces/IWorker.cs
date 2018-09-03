@@ -12,5 +12,7 @@ namespace WordSpy.Interfaces
         //List<SearchResult> Results { get; set; }
         void Run();
         void Wait();
+        void Interrupt();
+        void Stop();
     }
 }
