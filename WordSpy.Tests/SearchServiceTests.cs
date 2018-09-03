@@ -48,20 +48,6 @@ namespace WordSpy.Tests
                 .Where(call => call.Method.Name == "GetUrls")
                 .WithReturnType<IEnumerable<string>>()
                 .Returns(fakeLinks);
-
-            Node expectGraph = new Node(rootLink);
-            foreach (var item in childs)
-            {
-                expectGraph.isNodeOf(new Node(item));
-            }
-            int count = expectGraph.Nodes.Count;
-            for (int i = 0; i < count; i++)
-            {
-                for (int j = 0; j < deep; j++)
-                {
-                    expectGraph.Nodes[i].isNodeOf(new Node(fakeLinks[j]));
-                }
-            }
             #endregion
 
             #region Act

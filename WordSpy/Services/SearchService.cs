@@ -13,14 +13,6 @@ namespace WordSpy.Services
             _service = service;
         }
 
-        public void AddChildsToGraph(Node rootNode, List<string> childs)
-        {            
-            foreach (var item in childs)
-            {
-                rootNode.isNodeOf(new Node(item));
-            }
-        }
-
         public Node BuildGraph(int deep, string rootLink, List<string> links)
         {
             Node graph = new Node(rootLink);
@@ -29,14 +21,15 @@ namespace WordSpy.Services
                 graph.isNodeOf(new Node(item));
             }
             int count = graph.Nodes.Count;
-            string html;
-            List<string> nodeLinks;
             for (int i = 0; i < count; i++)
             {
-                html = _service.GetHTML(graph.Nodes[i].Link);
+                var html = _service.GetHTML(graph.Nodes[i].Link);
                 if (html == null) continue;
-                nodeLinks = _service.GetUrls(html).ToList();
-                graph.isNodeOfRange(i, nodeLinks, deep);
+                var nodeLinks = _service.GetUrls(html).ToList();
+                for (int j = 0; j < deep; j++)
+                {                   
+                    graph.Nodes[i].isNodeOf(new Node(nodeLinks[j]));                    
+                }
                 nodeLinks.Clear();
             }
             return graph;

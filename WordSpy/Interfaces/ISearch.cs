@@ -7,6 +7,5 @@ namespace WordSpy.Interfaces
     {
         SearchResult Search(Node root, string textToSearch);
         Node BuildGraph(int deep, string rootLink, List<string> links);
-        void AddChildsToGraph(Node rootNode, List<string> childs);
     }
 }
