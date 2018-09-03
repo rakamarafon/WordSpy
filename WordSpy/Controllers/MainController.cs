@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using WordSpy.DTO_s;
@@ -46,6 +47,8 @@ namespace WordSpy.Controllers
         [HttpPost]
         public IActionResult StartParamViewSubmit([FromForm] StartParamsDTO value)
         {
+            if (_worker.isRun == true) return View("Index");
+            _worker.isRun = true;
             var html = _download.GetHTML(value.URL);
             var links = _download.GetUrls(html);
             Node root = _service.BuildGraph(value.MaxScanURLs, value.URL, links.ToList());
@@ -55,6 +58,20 @@ namespace WordSpy.Controllers
             return View("ResultView", _worker.GetResults());
         }
 
+        public IActionResult PauseSearch()
+        {
+            if (_worker.isRun == false) return View("Index");
+            _worker.Interrupt();
+            PauseResult pauseResult = new PauseResult(_worker.GetResults());
+            pauseResult.Percent = _worker.GetDonePersent();
+            return View("PausedView", pauseResult);
+        }
+        public IActionResult StopSearch()
+        {
+            if (_worker.isRun == false) return View("Index");
+            _worker.Stop();
+            return View("ResultView", _worker.GetResults());
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

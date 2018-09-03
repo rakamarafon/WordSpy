@@ -1,5 +1,18 @@
 ﻿@{
     ViewData["Title"] = "Main Page";
 }
-
+<div>
+    <form asp-action="PauseSearch">
+               <div class="form-group">
+            <input type="submit" value="Pause" class="btn btn-default" />
+        </div>
+    </form>
+</div>
+<div>
+    <form asp-action="StopSearch">
+        <div class="form-group">
+            <input type="submit" value="Stop" class="btn btn-default" />
+        </div>
+    </form>
+</div>
 @Html.PartialAsync("StartParamView").GetAwaiter().GetResult();

@@ -7,12 +7,13 @@ namespace WordSpy.Interfaces
     {
         int Threads { get; set; }
         string Word { get; set; }
+        bool isRun { get; set; }
         Node Root { get; set; }
         List<SearchResult> GetResults();
-        //List<SearchResult> Results { get; set; }
+        int GetDonePersent();
         void Run();
         void Wait();
         void Interrupt();
-        void Stop();
+        void Stop();        
     }
 }

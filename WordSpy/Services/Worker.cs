@@ -12,10 +12,12 @@ namespace WordSpy.Services
         private IDownload _download;
         private object _block = new object();
         private List<Thread> _threads;
+        private int _prcToDone;
 
         public int Threads { get; set; }
         public string Word { get; set; }
         public Node Root { get; set; }
+        public bool isRun { get; set; }
 
         public volatile List<SearchResult> Results;
         
@@ -25,10 +27,17 @@ namespace WordSpy.Services
             _download = download;
             _threads = new List<Thread>();
             Results = new List<SearchResult>();
+            isRun = false;
         }
         public List<SearchResult> GetResults()
         {
             return Results;
+        }
+        public int GetDonePersent()
+        {
+            if (Root == null) return 0;
+            int current = Root.Nodes.Count;
+            return 0;
         }
         public void Run()
         {
@@ -49,6 +58,7 @@ namespace WordSpy.Services
         }
         public void Interrupt()
         {
+            isRun = false;
             foreach (var item in _threads)
             {
                 item.Interrupt();
@@ -57,10 +67,12 @@ namespace WordSpy.Services
 
         public void Stop()
         {
+            isRun = false;
             foreach (var item in _threads)
             {
                 item.Abort(); 
             }
+            _threads.Clear();
         }
 
         private void Search(object state)
@@ -70,15 +82,18 @@ namespace WordSpy.Services
             {
                 lock (_block)
                 {
-                    node = Root.Nodes.FirstOrDefault();
+                    node = Root.Nodes.FirstOrDefault();                   
                     if (node != null)
                     {
-                        Root.Nodes.Remove(node);
+                        Root.Nodes.Remove(node);                       
                     }
                 }
-                SearchResult result = _service.Search(node, Word);
-                if(result != null) Results.Add(result);
+                foreach (var item in node.Nodes)
+                {
+                    SearchResult result = _service.Search(item, Word);
+                    if (result != null) Results.Add(result);
+                }                
             }
-        }            
+        }        
     }
 }
