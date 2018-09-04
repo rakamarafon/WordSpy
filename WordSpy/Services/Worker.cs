@@ -51,6 +51,7 @@ namespace WordSpy.Services
                 _threads.Add(thread);
                 thread.Start();
             }
+            isRun = true;
         }
 
         public void Wait()

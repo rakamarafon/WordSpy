@@ -73,7 +73,7 @@ namespace WordSpy.Tests
             A.CallTo(_fakeDownload)
                  .Where(call => call.Method.Name == "GetHTML")
                  .WithReturnType<string>()
-                 .Returns(string.Format("<html> <head> <title>First case html</title> </head> <body> <div>some{0} text some text {1} <a href=>link</a></div> {2} <div>another text {3} <a href=>link</a> text text</div>{4}</body> </html>", text, text, text, text, text));
+                 .Returns(string.Format("<html> <head> <title>First case html</title> </head> <body> <div>some {0} text some text {1} <a href=>link</a></div> {2} <div>another text {3} <a href=>link</a> text text</div> {4} </body> </html>", text, text, text, text, text));
 
             A.CallTo(_fakeDownload)
                 .Where(call => call.Method.Name == "GetUrls")
