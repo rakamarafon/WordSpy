@@ -1,0 +1,22 @@
+﻿@model List<SearchResult>
+
+<table class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th scope="col">URl</th>
+            <th scope="col">Childs count</th>
+            <th scope="col">Words found</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in Model)
+        {
+            <tr>
+                <td scope="col"><a href=@i.URL>@i.URL</a></td>
+                <td scope="col">@i.Childs.Count</td>
+                <td scope="col">@i.Words.Count</td>
+            </tr>
+        }
+
+    </tbody>
+</table>

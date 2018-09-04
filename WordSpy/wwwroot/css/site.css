@@ -28,6 +28,25 @@ body {
     margin: 15px;
 }
 
+.pauseStop {
+    margin-top: 20px;
+    overflow: hidden;   
+}
+.pauseStop > div {
+    float:left;
+}
+
+.btn form {
+    display: inline-block;
+    padding-right: .66em;
+    position: relative;
+}
+.btn form::after {
+    color: #c00;
+    display: block;
+    position: absolute;
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
