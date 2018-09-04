@@ -1,5 +1,22 @@
 ﻿@model PauseResult
 
+<div class="pauseStop">
+    <div>
+        <form asp-action="ResumeSearch">
+            <div class="form-group">
+                <input type="submit" value="Resume" class="btn btn-warning" />
+            </div>
+        </form>
+    </div>
+    <div>
+        <form asp-action="StopSearch">
+            <div class="form-group">
+                <input type="submit" value="Stop" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>
+
 <table class="table table-striped table-dark">
     <thead>
         <tr>
@@ -21,5 +38,4 @@
     </tbody>
 </table>
 <div>
-  Done: @Model.Percent %
 </div>

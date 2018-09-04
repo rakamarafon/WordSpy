@@ -12,12 +12,13 @@ namespace WordSpy.Services
         private IDownload _download;
         private object _block = new object();
         private List<Thread> _threads;
-        private int _prcToDone;
+        private int _maxPrc;
 
         public int Threads { get; set; }
         public string Word { get; set; }
         public Node Root { get; set; }
         public bool isRun { get; set; }
+        public int Deep { get; set; }
 
         public volatile List<SearchResult> Results;
         
@@ -29,21 +30,17 @@ namespace WordSpy.Services
             Results = new List<SearchResult>();
             isRun = false;
         }
-        public void Init(Node root, int threads, string searchText)
+        public void Init(Node root, int threads, string searchText, int deep)
         {
             Root = root;
             Threads = threads;
             Word = searchText;
+            Deep = deep;
+            _maxPrc = Root.Nodes.Count;
         }
         public List<SearchResult> GetResults()
         {
             return Results;
-        }
-        public int GetDonePersent()
-        {
-            if (Root == null) return 0;
-            int current = Root.Nodes.Count;
-            return 0;
         }
         public void Run()
         {
@@ -65,7 +62,11 @@ namespace WordSpy.Services
 
         public void Resume()
         {
-
+            isRun = true;
+            lock (_threads)
+            {
+                Monitor.PulseAll(_threads);
+            }
         }
         public void Interrupt()
         {
@@ -81,7 +82,7 @@ namespace WordSpy.Services
             isRun = false;
             foreach (var item in _threads)
             {
-                item.Abort(); 
+                item.Abort();
             }
             _threads.Clear();
         }
@@ -89,6 +90,7 @@ namespace WordSpy.Services
         private void Search(object state)
         {
             Node node;
+            Thread.Sleep(10);
             while (Root.Nodes.Count != 0)
             {
                 lock (_block)
@@ -99,11 +101,12 @@ namespace WordSpy.Services
                         Root.Nodes.Remove(node);                       
                     }
                 }
-                foreach (var item in node.Nodes)
-                {
-                    SearchResult result = _service.Search(item, Word);
-                    if (result != null) Results.Add(result);
-                }                
+                var html = _download.GetHTML(node.Link);
+                if (html == null) continue;
+                var links = _download.GetUrls(html).ToList();
+                var temp = _service.AddChildToNode(node, links, Deep);
+                SearchResult result = _service.Search(temp, Word);
+                if (result != null) Results.Add(result);
             }
         }        
     }

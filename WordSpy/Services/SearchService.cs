@@ -13,6 +13,19 @@ namespace WordSpy.Services
             _service = service;
         }
 
+        public Node AddChildToNode(Node node, List<string> links, int deep)
+        {
+            Node temp = node;
+            int count = 0;
+            foreach (var item in links)
+            {
+                if (count == deep) break;
+                temp.isNodeOf(new Node(item));
+                count++;
+            }
+            return temp;
+        }
+
         public Node BuildGraph(int deep, string rootLink, List<string> links)
         {
             Node graph = new Node(rootLink);
@@ -20,21 +33,21 @@ namespace WordSpy.Services
             {
                 graph.isNodeOf(new Node(item));
             }
-            int count = graph.Nodes.Count;
-            for (int i = 0; i < count; i++)
-            {
-                var html = _service.GetHTML(graph.Nodes[i].Link);
-                if (html == null) continue;
-                var nodeLinks = _service.GetUrls(html).ToList();
-                var linksCount = nodeLinks.Count;
-                if (linksCount == 0) continue;
-                for (int j = 0; j < deep; j++)
-                {
-                    if (linksCount == j) break;
-                    graph.Nodes[i].isNodeOf(new Node(nodeLinks[j]));                    
-                }
-                nodeLinks.Clear();
-            }
+            //int count = graph.Nodes.Count;
+            //for (int i = 0; i < count; i++)
+            //{
+            //    var html = _service.GetHTML(graph.Nodes[i].Link);
+            //    if (html == null) continue;
+            //    var nodeLinks = _service.GetUrls(html).ToList();
+            //    var linksCount = nodeLinks.Count;
+            //    if (linksCount == 0) continue;
+            //    for (int j = 0; j < deep; j++)
+            //    {
+            //        if (linksCount == j) break;
+            //        graph.Nodes[i].isNodeOf(new Node(nodeLinks[j]));                    
+            //    }
+            //    nodeLinks.Clear();
+            //}
             return graph;
         }
 

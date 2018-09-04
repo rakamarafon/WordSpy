@@ -50,32 +50,34 @@ namespace WordSpy.Controllers
             if (_worker.isRun == true) return View("Index");
             _worker.isRun = true;
             var html = _download.GetHTML(value.URL);
+            if (html == null) return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             var links = _download.GetUrls(html);
             Node root = _service.BuildGraph(value.MaxScanURLs, value.URL, links.ToList());
-            _worker.Init(root, value.MaxThreads, value.TextToFind);
+            _worker.Init(root, value.MaxThreads, value.TextToFind, value.MaxScanURLs);
             _worker.Run();
             _worker.Wait();
-            return View("ResultView", _worker.GetResults());
+            _worker.isRun = false;
+            return View("ResultView", _worker.GetResults().OrderByDescending(x => x.Words.Count).Distinct().ToList());
         }
 
         public IActionResult PauseSearch()
         {
             if (_worker.isRun == false) return View("Index");
             _worker.Interrupt();
-            PauseResult pauseResult = new PauseResult(_worker.GetResults());
-            pauseResult.Percent = _worker.GetDonePersent();
+            PauseResult pauseResult = new PauseResult(_worker.GetResults().OrderByDescending(x => x.Words.Count).Distinct().ToList());
             return View("PausedView", pauseResult);
         }
         public IActionResult ResumeSearch()
         {
             _worker.Resume();
-            return View("ResultView", _worker.GetResults());
+            _worker.Wait();
+            return View("ResultView", _worker.GetResults().OrderByDescending(x => x.Words.Count).Distinct().ToList());
         }
         public IActionResult StopSearch()
         {
             if (_worker.isRun == false) return View("Index");
-            _worker.Stop();
-            return View("ResultView", _worker.GetResults());
+            //_worker.Stop();
+            return View("ResultView", _worker.GetResults().OrderByDescending(x => x.Words.Count).Distinct().ToList());
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

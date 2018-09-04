@@ -9,9 +9,9 @@ namespace WordSpy.Interfaces
         string Word { get; set; }
         bool isRun { get; set; }
         Node Root { get; set; }
+        int Deep { get; set; }
         List<SearchResult> GetResults();
-        void Init(Node root, int threads, string searchText);
-        int GetDonePersent();
+        void Init(Node root, int threads, string searchText, int deep);
         void Run();
         void Wait();
         void Interrupt();
