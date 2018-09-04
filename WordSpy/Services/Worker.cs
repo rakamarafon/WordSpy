@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using WordSpy.Interfaces;
@@ -54,10 +55,7 @@ namespace WordSpy.Services
 
         public void Wait()
         {
-            foreach (var item in _threads)
-            {
-                item.Join(); 
-            }
+            _threads.ForEach(x => x.Join());
         }
 
         public void Resume()
@@ -71,20 +69,16 @@ namespace WordSpy.Services
         public void Interrupt()
         {
             isRun = false;
-            foreach (var item in _threads)
-            {
-                item.Interrupt();
-            }
+            _threads.ForEach(x => x.Interrupt());
         }
 
         public void Stop()
         {
             isRun = false;
-            foreach (var item in _threads)
+            lock (_threads)
             {
-                item.Abort();
+                Monitor.PulseAll(_threads);
             }
-            _threads.Clear();
         }
 
         private void Search(object state)

@@ -27,15 +27,13 @@ namespace WordSpy.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "How to use WordSpy:";
 
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 
@@ -52,7 +50,7 @@ namespace WordSpy.Controllers
             var html = _download.GetHTML(value.URL);
             if (html == null) return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             var links = _download.GetUrls(html);
-            Node root = _service.BuildGraph(value.MaxScanURLs, value.URL, links.ToList());
+            Node root = _service.BuildGraph(value.URL, links.ToList());
             _worker.Init(root, value.MaxThreads, value.TextToFind, value.MaxScanURLs);
             _worker.Run();
             _worker.Wait();
@@ -70,13 +68,13 @@ namespace WordSpy.Controllers
         public IActionResult ResumeSearch()
         {
             _worker.Resume();
-            _worker.Wait();
+            //_worker.Wait();
             return View("ResultView", _worker.GetResults().OrderByDescending(x => x.Words.Count).Distinct().ToList());
         }
         public IActionResult StopSearch()
         {
             if (_worker.isRun == false) return View("Index");
-            //_worker.Stop();
+            _worker.Stop();
             return View("ResultView", _worker.GetResults().OrderByDescending(x => x.Words.Count).Distinct().ToList());
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

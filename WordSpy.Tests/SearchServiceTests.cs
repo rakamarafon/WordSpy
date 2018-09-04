@@ -34,7 +34,6 @@ namespace WordSpy.Tests
         public void BuildGraph_with_deep_rootLink_childLinks_expect_valid_Graph()
         {
             #region Average 
-            int deep = 2;
             string rootLink = "http://rootLink.com";
             List<string> childs = new List<string> { "http://child.com", "http://child.com", "http://child.com", "http://child.com", "http://child.com", "http://child.com", "http://child.com", "http://child.com", "http://child.com", "http://child.com" };
             List<string> fakeLinks = new List<string> { "http://fake.com" , "http://fake.com" , "http://fake.com" , "http://fake.com" , "http://fake.com" , "http://fake.com" , "http://fake.com" , "http://fake.com" , "http://fake.com" , "http://fake.com" };
@@ -51,18 +50,14 @@ namespace WordSpy.Tests
             #endregion
 
             #region Act
-            Node result = _service.BuildGraph(2, rootLink, childs);
+            Node result = _service.BuildGraph(rootLink, childs);
 
             int expectChilds = childs.Count;
-            int actualChilds = result.Nodes.Count;
-
-            int expectNodesInChilds = deep;
-            int actualNodesInChilds = result.Nodes[deep].Nodes.Count;
+            int actualChilds = result.Nodes.Count;            
             #endregion
 
             #region Assert
             Assert.AreEqual(expectChilds, actualChilds);
-            Assert.AreEqual(expectNodesInChilds, actualNodesInChilds);
             #endregion
         }
 

@@ -6,7 +6,7 @@ namespace WordSpy.Interfaces
     public interface ISearch
     {
         SearchResult Search(Node root, string textToSearch);
-        Node BuildGraph(int deep, string rootLink, List<string> links);
+        Node BuildGraph(string rootLink, List<string> links);
         Node AddChildToNode(Node node, List<string> links, int deep);
     }
 }
